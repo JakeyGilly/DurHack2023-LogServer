@@ -45,6 +45,7 @@ def main():
 				"message": message
 			}
 			s.sendall(json.dumps(jsona).encode('utf-8'))
+			t.sleep(0.1)
 			print(date, time, type, message)
 
 if __name__ == "__main__":
