@@ -20,15 +20,22 @@ def tail(fn):
 @app.route('/', methods = ['POST']) 
 def home():
 	if request.method == 'POST':
+		args = request.args
+		print(args)
+		seed = ""
+		try:
+			seed = args['seed']
+		except KeyError:
+			pass
 		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 			s.connect(("127.0.0.1", 65432))
 			files = os.listdir()
 			if platform.system() == 'Windows':
-				subprocess.Popen(["qrt_data_extraction-Windows_x64.exe"])
+				subprocess.Popen(["qrt_data_extraction-Windows_x64.exe", seed])
 			elif platform.system() == 'Darwin':
-				subprocess.Popen(["./qrt_data_extraction.MacOS"])
+				subprocess.Popen(["./qrt_data_extraction.MacOS", seed])
 			elif platform.system() == 'Linux':
-				subprocess.Popen(["./qrt_data_extraction.Linux_x86_x64"])
+				subprocess.Popen(["./qrt_data_extraction.Linux_x86_x64", seed])
 			t.sleep(1)
 			newfiles = os.listdir()
 			for file in newfiles:
@@ -50,7 +57,7 @@ def home():
 					"message": message
 				}
 				s.sendall(json.dumps(jsona).encode('utf-8'))
-				t.sleep(0.25)
+				t.sleep(0.5)
 				print(date, time, type, message)
 		return jsonify({"status": "success"})
 
